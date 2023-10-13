@@ -1,2 +1,2 @@
 const { CanvasCapture } = CanvasCaptureLib;
-console.log(CanvasCapture);
+console.log("CanvasCapture", CanvasCapture);
