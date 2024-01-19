@@ -22,7 +22,7 @@ window.logger_callback = async (url, data_logger, show_alert = false) => {
         alert(data.message)
       }
     } catch (error) {
-      alert(error.message)
+      show_alert && alert(error.message)
     }
   }
 }
