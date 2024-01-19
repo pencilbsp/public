@@ -6,7 +6,7 @@ window.rip_configs = {
 }
 ;(() => {
   if (typeof WebSocket !== "undefined" && window.rip_configs) {
-    const socket = new WebSocket(`ws://${new URL(window.rip_configs.host).host}/ws`)
+    const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
     // message is received
     socket.addEventListener("message", (event) => {
       console.log(`Nhận dữ liệu từ ripper: ${event.data}`)
