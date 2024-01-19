@@ -4,6 +4,25 @@ window.rip_configs = {
   ajax_logger: "/api/ajax-logger",
   keys_logger: "/api/keys-logger",
 }
+;(function (xhr) {
+  var XHR = XMLHttpRequest.prototype
+
+  var open = XHR.open
+  var send = XHR.send
+
+  XHR.open = function (method, url) {
+    this._url = url
+    this._method = method
+    return open.apply(this, arguments)
+  }
+
+  XHR.send = function (_body) {
+    this.addEventListener("load", function () {
+      alert(this._url)
+    })
+    return send.apply(this, arguments)
+  }
+})(XMLHttpRequest)
 
 window.logger_callback = async (url, data_logger, show_alert = false) => {
   if (typeof fetch !== "undefined") {
