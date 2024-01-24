@@ -14,7 +14,6 @@ window.rip_configs = {
 
     Object.defineProperty(image, "src", {
       set: function (srcAttr) {
-        // whatever else you want to put in here
         alert(srcAttr)
         image.setAttribute("src", srcAttr)
       },
