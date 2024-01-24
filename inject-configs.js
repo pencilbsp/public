@@ -32,19 +32,10 @@ async function load_segment(url) {
 ;(function () {
   var drawImage = CanvasRenderingContext2D.prototype.drawImage
   CanvasRenderingContext2D.prototype.drawImage = function () {
+    const image = arguments[0]
+
     this.canvas.toBlob(async function (blob) {
-      try {
-        const fileName = `${Date.now()}.jpg`
-        const file = new File([blob], fileName, { type: "image/jpeg" })
-        const formData = new FormData()
-        formData.append("image", file)
-        await fetch(window.rip_configs + "/upload/image", {
-          method: "POST",
-          body: formData,
-        })
-      } catch (error) {
-        alert(error.message)
-      }
+      alert(image.src)
     }, "image/jpeg")
 
     drawImage.apply(this, arguments)
