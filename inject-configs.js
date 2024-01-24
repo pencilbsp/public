@@ -36,14 +36,7 @@ async function load_segment(url) {
 
     this.canvas.toBlob(async function (blob) {
       try {
-        const fileName = `${Date.now()}.jpg`
-        const file = new File([blob], fileName, { type: "image/jpeg" })
-        const formData = new FormData()
-        formData.append("image", file)
-        await fetch(window.rip_configs.host + "/upload/image", {
-          method: "POST",
-          body: formData,
-        })
+        alert(`${typeof blob} - ${typeof File}`)
       } catch (error) {
         alert(error.message)
       }
