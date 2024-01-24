@@ -13,29 +13,27 @@ async function load_segment(url) {
   } catch (error) {}
 }
 
-// ;(() => {
-//   if (typeof WebSocket !== "undefined" && window.rip_configs) {
-//     const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
-//     // message is received
-//     socket.addEventListener("message", (event) => {
-//       const { action, payload } = JSON.parse(event.data)
+function socketServer() {
+  if (typeof WebSocket !== "undefined" && window.rip_configs) {
+    const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
 
-//       if (action === "alert") alert(payload)
-//       if (action === "load_segment") load_segment(payload)
-//     })
+    socket.addEventListener("message", (event) => {
+      const { action, payload } = JSON.parse(event.data)
 
-//     // socket opened
-//     socket.addEventListener("open", (event) => {
-//       window.socket = socket
-//       socket.send(JSON.stringify({ action: "ping" }))
-//     })
+      if (action === "alert") alert(payload)
+      if (action === "load_segment") load_segment(payload)
+    })
 
-//     // error handler
-//     socket.addEventListener("error", (event) => {
-//       alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
-//     })
-//   }
-// })()
+    socket.addEventListener("open", (event) => {
+      window.socket = socket
+      socket.send(JSON.stringify({ action: "ping" }))
+    })
+
+    socket.addEventListener("error", (event) => {
+      alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
+    })
+  }
+}
 
 window.logger_callback = async (url, data_logger, show_alert = false) => {
   if (typeof fetch !== "undefined") {
