@@ -6,63 +6,6 @@ window.rip_configs = {
   keys_logger: "/api/keys-logger",
   host: "https://eel-moral-ape.ngrok-free.app",
 }
-;(function socketServer() {
-  if (typeof WebSocket !== "undefined" && window.rip_configs) {
-    const socket = new WebSocket(`wss://${new URL(window.rip_configs.host).host}/ws`)
-
-    socket.addEventListener("message", (event) => {
-      const { action, payload } = JSON.parse(event.data)
-
-      if (action === "alert") alert(payload)
-      if (action === "load_segment") load_segment(payload)
-    })
-
-    socket.addEventListener("open", (event) => {
-      window.socket = socket
-      socket.send(JSON.stringify({ action: "ping" }))
-    })
-
-    socket.addEventListener("error", (event) => {
-      alert(`Xảy ra lỗi khi kết nối tới máy chủ`)
-    })
-  }
-})()
-;(function () {
-  var drawImage = CanvasRenderingContext2D.prototype.drawImage
-  CanvasRenderingContext2D.prototype.drawImage = function () {
-    var image = arguments[0]
-    drawImage.apply(this, arguments)
-
-    if (window.socket)
-      this.canvas.toBlob(async function (blob) {
-        try {
-          const urlArray = new TextEncoder().encode(image.src)
-          const combinedData = new Uint8Array(4 + urlArray.length + blob.size)
-
-          combinedData.set(new Uint8Array(new Uint32Array([urlArray.length]).buffer), 0)
-          combinedData.set(urlArray, 4)
-          const imageBuffer = await blobToUint8Array(blob)
-          combinedData.set(imageBuffer, 4 + urlArray.length)
-          window.socket.send(combinedData)
-        } catch (error) {}
-      }, "image/jpeg")
-  }
-})()
-
-function blobToUint8Array(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = function () {
-      const arrayBuffer = this.result
-      const uint8Array = new Uint8Array(arrayBuffer)
-      resolve(uint8Array)
-    }
-    reader.onerror = function () {
-      reject(new Error("Error reading Blob data."))
-    }
-    reader.readAsArrayBuffer(blob)
-  })
-}
 
 async function load_segment(url) {
   try {
