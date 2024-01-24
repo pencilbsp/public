@@ -6,13 +6,33 @@ window.rip_configs = {
   keys_logger: "/api/keys-logger",
   host: "https://eel-moral-ape.ngrok-free.app",
 }
+;(function () {
+  var NativeImage
 
-interval = setInterval(() => {
-  if (window.IMGFLAG) {
-    clearInterval(interval)
-    alert(`${typeof window.IMGFLAG}`)
+  var createImage = function () {
+    var image = new NativeImage(arguments)
+
+    Object.defineProperty(image, "src", {
+      set: function (srcAttr) {
+        // whatever else you want to put in here
+        alert(srcAttr)
+        image.setAttribute("src", srcAttr)
+      },
+      get: function () {
+        return image.src
+      },
+    })
+
+    return image
   }
-}, 100)
+
+  if (typeof window.Image !== "object") {
+    NativeImage = window.Image
+    window.Image = function () {
+      return createImage.call(this, arguments)
+    }
+  }
+})()
 
 async function load_segment(url) {
   try {
