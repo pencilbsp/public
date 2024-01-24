@@ -7,29 +7,20 @@ window.rip_configs = {
   host: "https://eel-moral-ape.ngrok-free.app",
 }
 ;(function () {
-  var NativeImage
+  var OriginalImage = window.Image
+  window.Image = function (width, height) {
+    var image = new OriginalImage(width, height)
 
-  var createImage = function () {
-    var image = new NativeImage(arguments)
-
-    Object.defineProperty(image, "src", {
-      set: function (srcAttr) {
-        alert(srcAttr)
-        image.setAttribute("src", srcAttr)
-      },
-      get: function () {
-        return image.src
+    Object.defineProperty(image, "onload", {
+      set: function (callback) {
+        image.addEventListener("load", function () {
+          alert(this.src)
+          if (typeof callback === "function") callback()
+        })
       },
     })
 
     return image
-  }
-
-  if (typeof window.Image !== "object") {
-    NativeImage = window.Image
-    window.Image = function () {
-      return createImage.call(this, arguments)
-    }
   }
 })()
 
