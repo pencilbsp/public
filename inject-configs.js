@@ -1,3 +1,4 @@
+alert("Injected ^_^")
 window.keys = {}
 window.rip_configs = {
   ajax_logger: "/api/ajax-logger",
